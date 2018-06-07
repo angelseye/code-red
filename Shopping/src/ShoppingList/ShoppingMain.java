@@ -4,21 +4,16 @@ import java.util.Scanner;
 import java.text.DecimalFormat;
 
 /**
- * Session 7: Make following changes in code of week6
- *  
- *  1. Comment code for printCostStatistics & printCouponStatistics and logic for more expensive 
- *     and least expensive items. Do not delete we will re-write this after we introduce
- *     arrays in Session 8. It is commented in the code below.    
- *  2. If name of item is more than 10 character stop execution and show user a message.  
- *  3. Modify the program to accept n number of items, where n is provided by user
- *  	a. Ask user how many items he want to enter.
- *  	b. Create a for loop and ask user item_name, item_price, item_quantity, item_coupon.
- *  	c. Calculate total cost for each item inside the loop.
- *  	d. Create a global variable finalCost.
- *  	e. Add totalCost for each item inside the loop to finalCost
- *      f. Ask user for couponCode input and apply to finalCost (this should already be in the code from previous exercise)
- *  
- **/
+* Session 8: Make following changes in code of week7
+*  
+*  1. Create Arrays for item_name, item_price, item_quantity, item_coupon
+*  2. Inside the loop add item_name, item_price, item_quantity, item_coupon input to Array
+*  3. Use data in arrays created in step 2 and implement following:
+*  a. printCostStatistics & printCouponStatistics 
+*      b. Implement logic for most expensive and least expensive items
+*      c. Move logic for most expensive and least expensive to different methods.
+*  
+**/
 
 public class ShoppingMain {
 	public static void main(String[] args) {
@@ -30,38 +25,49 @@ public class ShoppingMain {
 		System.out.print("Please enter the number of items you have: ");
 		int numOfItems = input.nextInt();
 		
+		String [] item_names = new String[numOfItems];
+		double [] item_prices = new double[numOfItems];
+		int [] item_quantities = new int[numOfItems];
+		int [] item_coupons = new int[numOfItems];
+		double [] item_finalCosts = new double[numOfItems];
+	     
 		for(int i=0; i<numOfItems; i++) {
-		  	String item_name = "";
-		  	while(item_name.length() == 0 || item_name.length() > 10) {
-		  	  if(item_name.length() > 10) {
+		  	String thisName = "";
+		  	while(thisName.length() == 0 || thisName.length() > 10) {
+		  	  if(thisName.length() > 10) {
 		  		System.out.println("Please limit your item name to 10 characters.");
 		  	  }
 		  	  System.out.print("Enter name of item " + (i+1) + ": ");
-		  	  item_name = input.next();
+		  	  thisName = input.next();
 		  	}
-			System.out.print("Enter price of " + item_name + ": ");
-			double item_price = input.nextDouble();
-			System.out.print("Enter quantity of " + item_name + ": ");
-			int item_quantity = input.nextInt();
-			System.out.print("Enter coupon rate for " + item_name + ": ");
-			int item_coupon = input.nextInt();
+		  	item_names[i] = thisName;
+			System.out.print("Enter price of " + thisName + ": ");
+			double thisPrice = input.nextDouble();
+			item_prices[i] = thisPrice;
+			System.out.print("Enter quantity of " + thisName + ": ");
+			int thisQuantity = input.nextInt();
+			item_quantities[i] = thisQuantity;
+			System.out.print("Enter coupon rate for " + thisName + ": ");
+			int thisCoupon = input.nextInt();
+			item_coupons[i] = thisCoupon;
 			System.out.println();
 			
-			double item_totalCost = calculateTotalCost(item_price, item_quantity);
-			printTotalCost(item_name, item_totalCost);
-			printCouponRate(item_name, item_coupon);
-			double item_finalCost = calculateFinalCost(item_totalCost, item_coupon);
-			printFinalCost(item_name, item_finalCost);
+			double thisTotalCost = calculateTotalCost(thisPrice, thisQuantity);
+			printTotalCost(thisName, thisTotalCost);
+			printCouponRate(thisName, thisCoupon);
+			double thisFinalCost = calculateFinalCost(thisTotalCost, thisCoupon);
+			item_finalCosts[i] = thisFinalCost;
+			printFinalCost(thisName, thisFinalCost);
 			System.out.println();
 
-			cartTotal += item_finalCost;
+			cartTotal += thisFinalCost;
 		}
-		
-//		printCostStatistics(item_1_name, item_1_finalCost, item_2_name, item_2_finalCost, item_3_name, item_3_finalCost);		
-//		System.out.println();
-//
-//		printCouponStatistics(item_1_coupon, item_2_coupon, item_3_coupon);
-//		System.out.println();
+
+		printCostStatistics(item_names, item_finalCosts);		
+		System.out.println();
+//TODO: Refactor below code to have less arguments
+		printCouponStatistics(item_coupons[0], item_coupons[1], item_coupons[2]);
+		System.out.println();
 
 		
 		// Calculate and print cost after coupon code
@@ -99,44 +105,31 @@ public class ShoppingMain {
 	}
 	
 	// Print Cost Statistics
-	private static void printCostStatistics(String name1, double finalCost1, String name2, double finalCost2, String name3, double finalCost3){
+	private static void printCostStatistics(String[] names, double[] finalCosts){
 	  double maxCost = 0;
-	  if(finalCost1 > finalCost2 && finalCost1 > finalCost3) {
-		maxCost = finalCost1;
-	  } else if(finalCost2 > finalCost1 && finalCost2 > finalCost3) {
-		maxCost = finalCost2;
-	  } else if(finalCost3 > finalCost1 && finalCost3 > finalCost2) {
-		maxCost = finalCost3;
+	  double minCost = finalCosts[0];
+	  String maxName = "";
+	  String minName = names[0];
+
+	  for(int i=0; i<finalCosts.length; i++) {
+		// compare max cost
+		if(maxCost < finalCosts[i]) {
+		  maxCost = finalCosts[i];
+		  maxName = names[i];
+		}
+		// compare min cost
+		if(minCost > finalCosts[i]) {
+		  minCost = finalCosts[i];
+		  minName = names[i];
+		}
 	  }
 	  
-	  double minCost = 0;
-	  if(finalCost1 < finalCost2 && finalCost1 < finalCost3) {
-		minCost = finalCost1;
-	  } else if(finalCost2 < finalCost1 && finalCost2 < finalCost3) {
-		minCost = finalCost2;
-	  } else if(finalCost3 < finalCost1 && finalCost3 < finalCost2) {
-		minCost = finalCost3;
-	  }
-		
-	  	System.out.println("****** Cost statistics ******");
-		System.out.println("Most expensive item costs: " + dollarFormat(maxCost));
-		System.out.println("Cheapest item costs: " + dollarFormat(minCost));
-		//Print name of item which is most expensive
-		if(maxCost == finalCost1) {
-		  System.out.println(name1 + " is the most expensive item");
-		} else if(maxCost == finalCost2) {
-		  System.out.println(name2 + " is the most expensive item");
-		} else {
-		  System.out.println(name3 + " is the most expensive item");
-		}
-		//Print name of item which is least expensive
-		if(minCost == finalCost1) {
-		  System.out.println(name1 + " is the least expensive item");
-		} else if(minCost == finalCost2){
-		  System.out.println(name2 + " is the least expensive item");
-		} else {
-		  System.out.println(name3 + " is the least expensive item");
-		}
+	  System.out.println("****** Cost statistics ******");
+	  System.out.println("Most expensive item costs: " + dollarFormat(maxCost));
+	  System.out.println("Cheapest item costs: " + dollarFormat(minCost));
+	  //Print name of item which is most expensive
+	  System.out.println(maxName + " is the most expensive item");
+	  System.out.println(minName + " is the least expensive item");
 	}
 	
 	// Print Coupon Statistics
