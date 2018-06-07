@@ -24,83 +24,38 @@ public class ShoppingMain {
 	public static void main(String[] args) {
 	  	// Setup Prompt for Gathering Data
 		input = new Scanner(System.in);
+		double cartTotal = 0;
 
-		//TODO: 2. Ask user input for number of items and create loop
+		//Ask user input for number of items and create loop
+		System.out.print("Please enter the number of items you have: ");
+		int numOfItems = input.nextInt();
 		
-		// Item 1
-		System.out.print("Enter name of item 1: ");
-		String item_1_name = input.next();
-		
-		//TODO: 1. Add a check for name not greater than 10 characters. 
+		for(int i=0; i<numOfItems; i++) {
+		  	String item_name = "";
+		  	while(item_name.length() == 0 || item_name.length() > 10) {
+		  	  if(item_name.length() > 10) {
+		  		System.out.println("Please limit your item name to 10 characters.");
+		  	  }
+		  	  System.out.print("Enter name of item " + (i+1) + ": ");
+		  	  item_name = input.next();
+		  	}
+			System.out.print("Enter price of " + item_name + ": ");
+			double item_price = input.nextDouble();
+			System.out.print("Enter quantity of " + item_name + ": ");
+			int item_quantity = input.nextInt();
+			System.out.print("Enter coupon rate for " + item_name + ": ");
+			int item_coupon = input.nextInt();
+			System.out.println();
+			
+			double item_totalCost = calculateTotalCost(item_price, item_quantity);
+			printTotalCost(item_name, item_totalCost);
+			printCouponRate(item_name, item_coupon);
+			double item_finalCost = calculateFinalCost(item_totalCost, item_coupon);
+			printFinalCost(item_name, item_finalCost);
+			System.out.println();
 
-		System.out.print("Enter price of " + item_1_name + ": ");
-		double item_1_price = input.nextDouble();
-		System.out.print("Enter quantity of " + item_1_name + ": ");
-		int item_1_quantity = input.nextInt();
-		System.out.print("Enter coupon rate for " + item_1_name + ": ");
-		int item_1_coupon = input.nextInt();
-		System.out.println();
-
-		
-		// Item 2
-		System.out.print("Enter name of item 2: ");
-		String item_2_name = input.next();
-		
-		//TODO: 1. Add a check for name not greater than 10 characters. 
-
-		System.out.print("Enter price of " + item_2_name + ": ");
-		double item_2_price = input.nextDouble();
-		System.out.print("Enter quantity of " + item_2_name + ": ");
-		int item_2_quantity = input.nextInt();
-		System.out.print("Enter coupon rate for " + item_2_name + ": ");
-		int item_2_coupon = input.nextInt();
-		System.out.println();
-		
-		
-		// Item 3
-		System.out.print("Enter name of item 3: ");
-		String item_3_name = input.next();
-		
-		//TODO: 1. Add a check for name not greater than 10 characters. 
-
-		System.out.print("Enter price of " + item_3_name + ": ");
-		double item_3_price = input.nextDouble();
-		System.out.print("Enter quantity of " + item_3_name + ": ");
-		int item_3_quantity = input.nextInt();
-		System.out.print("Enter coupon rate for " + item_3_name + ": ");
-		int item_3_coupon = input.nextInt();
-		System.out.println();
-
-		
-		// Price x Quantity for Total Cost
-		//TODO: 1 - Write a method to calculate total cost instead of writing below code for each item. 
-//		int item_1_totalCost = item_1_price * item_1_quantity;
-		double item_1_totalCost = calculateTotalCost(item_1_price, item_1_quantity);
-		double item_2_totalCost = calculateTotalCost(item_2_price, item_2_quantity);
-		double item_3_totalCost = calculateTotalCost(item_3_price, item_3_quantity);
-		printTotalCost(item_1_name, item_1_totalCost);
-		printTotalCost(item_2_name, item_2_totalCost);
-		printTotalCost(item_3_name, item_3_totalCost);
-		System.out.println();
-
-		
-		// Coupon Rates
-		printCouponRate(item_1_name, item_1_coupon);
-		printCouponRate(item_2_name, item_2_coupon);
-		printCouponRate(item_3_name, item_3_coupon);
-		System.out.println();
-
-
-		// Calculate Final Cost
-		//TODO: 2 - Write a method to calculate final cost instead of writing below code for each item. 
-		double item_1_finalCost = calculateFinalCost(item_1_totalCost, item_1_coupon);
-		double item_2_finalCost = calculateFinalCost(item_2_totalCost, item_2_coupon);
-		double item_3_finalCost = calculateFinalCost(item_3_totalCost, item_3_coupon);
-		printFinalCost(item_1_name, item_1_finalCost);
-		printFinalCost(item_2_name, item_2_finalCost);
-		printFinalCost(item_3_name, item_3_finalCost);
-		System.out.println();
-
+			cartTotal += item_finalCost;
+		}
 		
 //		printCostStatistics(item_1_name, item_1_finalCost, item_2_name, item_2_finalCost, item_3_name, item_3_finalCost);		
 //		System.out.println();
@@ -112,7 +67,7 @@ public class ShoppingMain {
 		// Calculate and print cost after coupon code
 		int cart_coupon_rate = getCartCouponRate();
 		System.out.println("****** Final Cart Total ******");
-		double cartTotal_before_coupon = item_1_finalCost + item_2_finalCost + item_3_finalCost;
+		double cartTotal_before_coupon = cartTotal;
 		System.out.println("Your Cart Total: " + dollarFormat(cartTotal_before_coupon));
 		double cartTotal_after_coupon = calculateCouponCost(cartTotal_before_coupon, cart_coupon_rate);
 		System.out.println("Your Cart: " + dollarFormat(cartTotal_after_coupon));
