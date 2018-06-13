@@ -65,8 +65,7 @@ public class ShoppingMain {
 
 		printCostStatistics(item_names, item_finalCosts);		
 		System.out.println();
-//TODO: Refactor below code to have less arguments
-		printCouponStatistics(item_coupons[0], item_coupons[1], item_coupons[2]);
+		printCouponStatistics(item_coupons);
 		System.out.println();
 
 		
@@ -133,20 +132,13 @@ public class ShoppingMain {
 	}
 	
 	// Print Coupon Statistics
-	private static void printCouponStatistics(int coupon1, int coupon2, int coupon3){
+	private static void printCouponStatistics(int [] coupons){
 		System.out.println("****** Coupon statistics ******");
-		double maxCoupon;
-		if(coupon1 > coupon2) {
-		  if(coupon1 > coupon3) {
-			maxCoupon = coupon1;
-		  }else {
-			maxCoupon = coupon3;
-		  }
-		}else {
-		  if(coupon2 > coupon3) {
-			maxCoupon = coupon2;
-		  }else {
-			maxCoupon = coupon3;
+		double maxCoupon = 0;
+		
+		for(int i=0; i<coupons.length; i++) {
+		  if(coupons[i] > maxCoupon) {
+			maxCoupon = coupons[i];
 		  }
 		}
 		System.out.println(maxCoupon + " percent off is awesome!!");
