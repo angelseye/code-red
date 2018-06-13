@@ -7,6 +7,7 @@ public class Item {
   private double price;
   private int quantity;
   private int coupon;
+  private double totalCost;
   
   
   // Constructor
@@ -15,23 +16,51 @@ public class Item {
 	this.price = 0.00;
 	this.quantity = 0;
 	this.coupon = 0;
-  }
-  
-  public static void main(String[] args) {
-	String s1 = "India";
-	String s2 = "Java";
-	printStringLength(s1);
-	printStringLength(s2);
+	this.totalCost = 0;
   }
   
   
-  public static void printStringLength(String str) {
-	System.out.println(calculateStringLength(str));
+  // Getters / Setters
+  public void setName(String name) {
+	this.name = name;
+  }
+  
+  public String getName() {
+	return this.name;
+  }
+  
+  public void setPrice(double price) {
+	this.price = price;
+  }
+  
+  public double getPrice() {
+	return this.price;
+  }
+  
+  public void setQuantity(int quantity) {
+	this.quantity = quantity;
+  }
+  
+  public int getQuantity() {
+	return this.quantity;
+  }
+  
+  public void setCoupon(int coupon) {
+	this.coupon = coupon;
+  }
+  
+  public int getCoupon() {
+	return this.coupon;
   }
   
   
-  public static int calculateStringLength(String str) {
-	return str.length();
+  // Methods
+  public double calculateTotalCost() {
+	this.totalCost = this.price * this.quantity;
+	return this.totalCost;
   }
-
+  
+  public double calculateFinalCost() {
+	return this.totalCost - (this.totalCost * this.coupon / 100);
+  }
 }

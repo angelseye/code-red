@@ -4,14 +4,13 @@ import java.util.Scanner;
 import java.text.DecimalFormat;
 
 /**
-* Session 8: Make following changes in code of week7
-*  
-*  1. Create Arrays for item_name, item_price, item_quantity, item_coupon
-*  2. Inside the loop add item_name, item_price, item_quantity, item_coupon input to Array
-*  3. Use data in arrays created in step 2 and implement following:
-*  a. printCostStatistics & printCouponStatistics 
-*      b. Implement logic for most expensive and least expensive items
-*      c. Move logic for most expensive and least expensive to different methods.
+* Session 9: Make following changes in code of week8
+*  1. Add validation that price should be greater than zero
+*  2. Add validation that quantity should be greater than zero
+*  3. Add validation that coupon should be in between 1 and 100
+*  4. Add validation that coupon code on shopping i.e. A, B, C should be only of one character
+*  5. If coupon code is other than A, B, C then show user a message "Invalid coupon Code"
+*  6. If any validation fails, retry i.e. ask same input again and execute other logic 
 *  
 **/
 
@@ -41,12 +40,15 @@ public class ShoppingMain {
 		  	  thisName = input.next();
 		  	}
 		  	item_names[i] = thisName;
+//TODO: 1. Add validation that price should be greater than zero
 			System.out.print("Enter price of " + thisName + ": ");
 			double thisPrice = input.nextDouble();
 			item_prices[i] = thisPrice;
+//TODO: 2. Add validation that quantity should be greater than zero
 			System.out.print("Enter quantity of " + thisName + ": ");
 			int thisQuantity = input.nextInt();
 			item_quantities[i] = thisQuantity;
+//TODO: 3. Add validation that coupon should be in between 1 and 100
 			System.out.print("Enter coupon rate for " + thisName + ": ");
 			int thisCoupon = input.nextInt();
 			item_coupons[i] = thisCoupon;
@@ -70,6 +72,7 @@ public class ShoppingMain {
 
 		
 		// Calculate and print cost after coupon code
+//TODO: 5. Add validation that coupon code on shopping i.e. A, B, C should be only of one character
 		int cart_coupon_rate = getCartCouponRate();
 		System.out.println("****** Final Cart Total ******");
 		double cartTotal_before_coupon = cartTotal;
