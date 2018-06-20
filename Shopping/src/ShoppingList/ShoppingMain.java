@@ -1,20 +1,8 @@
 package ShoppingList;
 
 import java.util.Scanner;
-import java.text.DecimalFormat;
+import utilities.Format;
 
-
-
-/**
-* Session 9: Make following changes in code of week8
-*  1. Add validation that price should be greater than zero
-*  2. Add validation that quantity should be greater than zero
-*  3. Add validation that coupon should be in between 1 and 100
-*  4. Add validation that coupon code on shopping i.e. A, B, C should be only of one character
-*  5. If coupon code is other than A, B, C then show user a message "Invalid coupon Code"
-*  6. If any validation fails, retry i.e. ask same input again and execute other logic 
-*  
-**/
 
 public class ShoppingMain {
   public static void main(String[] args) {
@@ -26,168 +14,75 @@ public class ShoppingMain {
 	System.out.print("Please enter the number of items you have: ");
 	int numOfItems = input.nextInt();
 	
-	String [] item_names = new String[numOfItems];
-	double [] item_prices = new double[numOfItems];
-	int [] item_quantities = new int[numOfItems];
-	int [] item_coupons = new int[numOfItems];
-	double [] item_finalCosts = new double[numOfItems];
-	     
+	Item [] items = new Item[numOfItems];
+	
+	// Loop through number of items and construct each one     
 	for(int i=0; i<numOfItems; i++) {
-	  boolean askedFlag = false;
-
-	  // Item Name
-	  String thisName = "";
-	  while(thisName.length() == 0 || thisName.length() > 10) {
-		if(thisName.length() > 10) {
-		  System.out.println("Please limit your item name to 10 characters.");
-		}
-		System.out.print("Enter name of item " + (i+1) + ": ");
-		thisName = input.next();
-	  }
-	  item_names[i] = thisName;
-	  
-	  // Item Price
-	  double thisPrice = 0;
-	  while(!askedFlag || thisPrice <= 0) {
-		if(askedFlag && thisPrice <= 0) {
-		  System.out.println("Please enter a price above 0.00");
-		}
-		System.out.print("Enter price of " + thisName + ": ");
-		askedFlag = true;
-		thisPrice = input.nextDouble();
-	  }
-	  item_prices[i] = thisPrice;
-	  
-	  // Item quantity
-	  int thisQuantity = 0;
-	  askedFlag = false;
-	  while(!askedFlag || thisQuantity <= 0) {
-		if(askedFlag && thisQuantity <= 0) {
-		  System.out.println("Please enter a quantity above 0");
-		}
-		System.out.print("Enter quantity of " + thisName + ": ");
-		askedFlag = true;
-		thisQuantity = input.nextInt();
-	  }
-	  item_quantities[i] = thisQuantity;
-	  
-	  // Item Coupon
-	  int thisCoupon = 0;
-	  askedFlag = false;
-	  while(!askedFlag || thisCoupon <= 0 || thisCoupon > 100) {
-		if(askedFlag && (thisCoupon <= 0 || thisCoupon > 100)) {
-		  System.out.println("Please enter a value between 1 and 100");
-		}
-		System.out.print("Enter coupon rate for " + thisName + ": ");
-		askedFlag = true;
-		thisCoupon = input.nextInt();
-	  }
-	  item_coupons[i] = thisCoupon;
-	  System.out.println();
-
-	  // Calculate Item Costs and Coupons
-	  double thisTotalCost = calculateTotalCost(thisPrice, thisQuantity);
-	  printTotalCost(thisName, thisTotalCost);
-	  printCouponRate(thisName, thisCoupon);
-	  double thisFinalCost = calculateFinalCost(thisTotalCost, thisCoupon);
-	  item_finalCosts[i] = thisFinalCost;
-	  printFinalCost(thisName, thisFinalCost);
-	  System.out.println();
-	  
-	  cartTotal += thisFinalCost;
+	  // Construct an instance
+	  items[i] = new Item(); // instantiates and gets details of item
+	  cartTotal += items[i].getFinalCost();
 	}
-	
-	printCostStatistics(item_names, item_finalCosts);		
+
+	// Show cost and coupon stats for all items
+	printCostStatistics(items);		
 	System.out.println();
-	printCouponStatistics(item_coupons);
+	printCouponStatistics(items);
 	System.out.println();
-	
-	
+		
 	// Calculate and print cost after coupon code
 	int cart_coupon_rate = getCartCouponRate();
 	System.out.println("****** Final Cart Total ******");
 	double cartTotal_before_coupon = cartTotal;
-	System.out.println("Your Cart Total: " + dollarFormat(cartTotal_before_coupon));
+	System.out.println("Your Cart Total: " + Format.dollarFormat(cartTotal_before_coupon));
 	double cartTotal_after_coupon = calculateCouponCost(cartTotal_before_coupon, cart_coupon_rate);
-	System.out.println("Your Cart: " + dollarFormat(cartTotal_after_coupon));
+	System.out.println("Your Cart: " + Format.dollarFormat(cartTotal_after_coupon));
   }
 
 
 	
   /********** PRIVATE METHODS **********/
   
-  // Display Money Format
-  private static String dollarFormat(double amount) {
-	DecimalFormat dollarize = new DecimalFormat("$#0.00");
-	return dollarize.format(amount);
-  }
-  
-  // Print Total Cost
-  private static void printTotalCost(String itemName, double totalCost) {
-	System.out.println("Total cost of " + itemName + " is " + dollarFormat(totalCost));
-  }
-  
-  // Print Coupon Rate
-  private static void printCouponRate(String itemName, int coupon) {
-	System.out.println("Coupon rate of " + itemName + " is " + coupon + "%");
-  }
-  
-  // Print Final Cost
-  private static void printFinalCost(String itemName, double finalCost) {
-	System.out.println("Final cost after discount for " + itemName + " is " + dollarFormat(finalCost));
-  }
-  
   // Print Cost Statistics
-  private static void printCostStatistics(String[] names, double[] finalCosts){
+  private static void printCostStatistics(Item[] items){
 	double maxCost = 0;
-	double minCost = finalCosts[0];
+	double minCost = items[0].getFinalCost();
 	String maxName = "";
-	String minName = names[0];
+	String minName = items[0].getName();
 	
-	for(int i=0; i<finalCosts.length; i++) {
+	for(int i=0; i<items.length; i++) {
 	  // compare max cost
-	  if(maxCost < finalCosts[i]) {
-		maxCost = finalCosts[i];
-		maxName = names[i];
+	  if(maxCost < items[i].getFinalCost()) {
+		maxCost = items[i].getFinalCost();
+		maxName = items[i].getName();
 	  }
 	  // compare min cost
-	  if(minCost > finalCosts[i]) {
-		minCost = finalCosts[i];
-		minName = names[i];
+	  if(minCost > items[i].getFinalCost()) {
+		minCost = items[i].getFinalCost();
+		minName = items[i].getName();
 	  }
 	}
 	
 	System.out.println("****** Cost statistics ******");
-	System.out.println("Most expensive item costs: " + dollarFormat(maxCost));
-	System.out.println("Cheapest item costs: " + dollarFormat(minCost));
+	System.out.println("Most expensive item costs: " + Format.dollarFormat(maxCost));
+	System.out.println("Cheapest item costs: " + Format.dollarFormat(minCost));
 	//Print name of item which is most expensive
 	System.out.println(maxName + " is the most expensive item");
 	System.out.println(minName + " is the least expensive item");
   }
 	
   // Print Coupon Statistics
-  private static void printCouponStatistics(int [] coupons){
+  private static void printCouponStatistics(Item[] items){
 	System.out.println("****** Coupon statistics ******");
 	double maxCoupon = 0;
 	
-	for(int i=0; i<coupons.length; i++) {
-	  if(coupons[i] > maxCoupon) {
-		maxCoupon = coupons[i];
+	for(int i=0; i<items.length; i++) {
+	  if(items[i].getCoupon() > maxCoupon) {
+		maxCoupon = items[i].getCoupon();
 	  }
 	}
 	System.out.println(maxCoupon + " percent off is awesome!!");
   }
 	
-  // Calculate Total Cost
-  private static double calculateTotalCost(double price, int quantity) {
-	return price * quantity;
-  }
-  
-  // Calculate Final Cost
-  private static double calculateFinalCost(double totalCost, int coupon) {
-	return totalCost - (totalCost * coupon / 100);
-  }
-  
   // Get Cart Coupon Rate
   private static int getCartCouponRate() {
 	// Prompt user for coupon code to apply on whole shopping cart
@@ -224,7 +119,7 @@ public class ShoppingMain {
   private static double calculateCouponCost(double cost, int coupon) {
 	double savings = cost * coupon / 100;
 	double result = cost - savings;
-	System.out.println("Coupon Savings: " + dollarFormat(savings));
+	System.out.println("Coupon Savings: " + Format.dollarFormat(savings));
 	return result;
   }
   
