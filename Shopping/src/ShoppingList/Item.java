@@ -19,13 +19,6 @@ public class Item {
 	// Setup Prompt for Gathering Data
 	input = new Scanner(System.in);
 	  
-	this.name = "";
-	this.price = 0.00;
-	this.quantity = 0;
-	this.coupon = 0;
-	this.totalCost = 0.00;
-	this.finalCost = 0.00;
-	
 	this.askForName();
 	this.askForPrice();
 	this.askForQuantity();
@@ -94,51 +87,7 @@ public class Item {
   
   /***** Public *****/
   
-  // Ask for Item Name
-  public String askForName() {
-	boolean isValid = false;
-	while(!isValid) {
-	  System.out.print("Enter the name of the item: ");
-	  this.setName(input.next());
-	  isValid = isValidName();
-	}
-	return this.name;
-  }
-  
-  // Ask for Item Price
-  public double askForPrice() {
-	boolean isValid = false;
-	while(!isValid) {
-	  System.out.print("Enter the price of " + this.name + ": ");
-	  this.setPrice(input.nextDouble());
-	  isValid = isValidPrice();
-	}
-	return this.price;
-  }
-  
-  // Ask for Item Quantity
-  public int askForQuantity() {
-	boolean isValid = false;
-	while(!isValid) {
-	  System.out.print("Enter the quantity of " + this.name + ": ");
-	  this.setQuantity(input.nextInt());
-	  isValid = isValidQuantity();
-	}
-	return this.quantity;
-  }
-  
-  // Ask for Item Coupon
-  public int askForCoupon() {
-	boolean isValid = false;
-	while(!isValid) {
-	  System.out.print("Enter the coupon % rate for " + this.name + ": ");
-	  this.setCoupon(input.nextInt());
-	  isValid = isValidCouponRate();
-	}
-	return this.coupon;
-  }
-  
-  // Calculate Total Cost
+   // Calculate Total Cost
   public double calculateTotalCost() {
 	this.totalCost = this.price * this.quantity;
 	return this.totalCost;
@@ -168,6 +117,50 @@ public class Item {
  
   /***** Private *****/
     
+  // Ask for Item Name
+  private String askForName() {
+	boolean isValid = false;
+	while(!isValid) {
+	  System.out.print("Enter the name of the item: ");
+	  this.setName(input.next());
+	  isValid = isValidName();
+	}
+	return this.name;
+  }
+  
+  // Ask for Item Price
+  private double askForPrice() {
+	boolean isValid = false;
+	while(!isValid) {
+	  System.out.print("Enter the price of " + this.name + ": ");
+	  this.setPrice(input.nextDouble());
+	  isValid = isValidPrice();
+	}
+	return this.price;
+  }
+  
+  // Ask for Item Quantity
+  private int askForQuantity() {
+	boolean isValid = false;
+	while(!isValid) {
+	  System.out.print("Enter the quantity of " + this.name + ": ");
+	  this.setQuantity(input.nextInt());
+	  isValid = isValidQuantity();
+	}
+	return this.quantity;
+  }
+  
+  // Ask for Item Coupon
+  private int askForCoupon() {
+	boolean isValid = false;
+	while(!isValid) {
+	  System.out.print("Enter the coupon % rate for " + this.name + ": ");
+	  this.setCoupon(input.nextInt());
+	  isValid = isValidCouponRate();
+	}
+	return this.coupon;
+  }
+  
   /********** Validations **********/
   private boolean isValidName() {
 	int errors = 0;
