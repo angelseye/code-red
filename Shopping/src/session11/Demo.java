@@ -39,6 +39,15 @@ public class Demo {
 	  char result = (char)data;
 	  System.out.print(result);
 	}
+	
+	System.out.println("");
+	
+	String line;
+	BufferedReader source = new BufferedReader(new FileReader(inputFile));
+	
+	while((line = source.readLine()) != null) {
+	  System.out.println(line);
+	}
   }
 
 }

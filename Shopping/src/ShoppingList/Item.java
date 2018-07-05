@@ -18,24 +18,9 @@ public class Item {
   public Item() {
 	// Setup Prompt for Gathering Data
 	input = new Scanner(System.in);
-	  
-	this.askForName();
-	this.askForPrice();
-	this.askForQuantity();
-	this.askForCoupon();
-
-	System.out.println();
-	
-	// Calculate Item Costs and Coupons
-	this.calculateTotalCost();
-	this.printTotalCost();
-	this.printCouponRate();
-	
-	this.calculateFinalCost();
-	this.printFinalCost();
-	
-	System.out.println();  
-}
+  }
+  
+  
   
   
   /********** Getters / Setters **********/
@@ -87,7 +72,46 @@ public class Item {
   
   /***** Public *****/
   
-   // Calculate Total Cost
+  public void buildItem() {	  
+	this.askForName();
+	this.askForPrice();
+	this.askForQuantity();
+	this.askForCoupon();
+
+	System.out.println();
+	
+	// Calculate Item Costs and Coupons
+	this.calculateTotalCost();
+	this.printTotalCost();
+	this.printCouponRate();
+	
+	this.calculateFinalCost();
+	this.printFinalCost();
+	
+	System.out.println();  
+  }
+  
+  // Import Items
+  public void importItem(String name, double price, int quantity, int coupon) {
+	this.setName(name);
+	this.setPrice(price);
+	this.setQuantity(quantity);
+	this.setCoupon(coupon);
+
+	System.out.println();
+	
+	// Calculate Item Costs and Coupons
+	this.calculateTotalCost();
+	this.printTotalCost();
+	this.printCouponRate();
+	
+	this.calculateFinalCost();
+	this.printFinalCost();
+	
+	System.out.println();  
+  }
+  
+  // Calculate Total Cost
   public double calculateTotalCost() {
 	this.totalCost = this.price * this.quantity;
 	return this.totalCost;
@@ -160,6 +184,7 @@ public class Item {
 	}
 	return this.coupon;
   }
+  
   
   /********** Validations **********/
   private boolean isValidName() {

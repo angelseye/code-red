@@ -1,27 +1,51 @@
 package ShoppingList;
 
+import java.io.*;
 import java.util.Scanner;
 import utilities.Format;
 
 
 public class ShoppingMain {
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
 	// Setup Prompt for Gathering Data
 	input = new Scanner(System.in);
 	double cartTotal = 0;
-
-	//Ask user input for number of items and create loop
-	System.out.print("Please enter the number of items you have: ");
-	int numOfItems = input.nextInt();
+	Item [] items = null;
 	
-	Item [] items = new Item[numOfItems];
-	
-	// Loop through number of items and construct each one     
-	for(int i=0; i<numOfItems; i++) {
-	  // Construct an instance
-	  items[i] = new Item(); // instantiates and gets details of item
-	  cartTotal += items[i].getFinalCost();
+	// Check to see if we need to import items from File
+	try {
+	  BufferedReader importList = checkForImport();
+	  Item [] importItems = new Item[3];
+	  if(importList != null) {	
+		String line; 
+		int i = 0;
+		while((line = importList.readLine()) != null) {
+		  String[] lineArray = line.split(",");
+		  importItems[i] = new Item();
+		  importItems[i].importItem(lineArray[0], Double.parseDouble(lineArray[1]), Integer.parseInt(lineArray[2]), Integer.parseInt(lineArray[3]));
+		  cartTotal += importItems[i].getFinalCost();
+		  i++;
+		}
+		items = importItems;
+	  }
+	} catch (FileNotFoundException e) {
+	  e.printStackTrace();
 	}
+	System.out.println("");
+
+//	//Ask user input for number of items and create loop
+//	System.out.print("Please enter the number of items you have: ");
+//	int numOfItems = input.nextInt();
+//	
+//	Item [] items = new Item[numOfItems];
+//	
+//	// Loop through number of items and construct each one     
+//	for(int i=0; i<numOfItems; i++) {
+//	  // Construct an instance
+//	  items[i] = new Item(); // instantiates item
+//	  items[i].buildItem(); // asks questions to build item for cart
+//	  cartTotal += items[i].getFinalCost();
+//	}
 
 	// Show cost and coupon stats for all items
 	printCostStatistics(items);		
@@ -40,7 +64,15 @@ public class ShoppingMain {
 
 
 	
-  /********** PRIVATE METHODS **********/
+  /********** PRIVATE METHODS 
+   * @throws FileNotFoundException **********/
+  
+  // Check for Import
+  private static BufferedReader checkForImport() throws FileNotFoundException {
+	File file = new File("src/ShoppingList/listForImport");
+	BufferedReader list = new BufferedReader(new FileReader(file));
+	return list;
+  }
   
   // Print Cost Statistics
   private static void printCostStatistics(Item[] items){
