@@ -1,6 +1,8 @@
 package ShoppingList;
 
 import java.util.Scanner;
+import java.lang.Math;
+
 import utilities.Format;
 
 public class Item {
@@ -82,12 +84,10 @@ public class Item {
 	
 	// Calculate Item Costs and Coupons
 	this.calculateTotalCost();
-	this.printTotalCost();
-	this.printCouponRate();
-	
 	this.calculateFinalCost();
-	this.printFinalCost();
 	
+	// Print Totals
+	this.printTotals();
 	System.out.println();  
   }
   
@@ -102,12 +102,10 @@ public class Item {
 	
 	// Calculate Item Costs and Coupons
 	this.calculateTotalCost();
-	this.printTotalCost();
-	this.printCouponRate();
-	
 	this.calculateFinalCost();
-	this.printFinalCost();
 	
+	// Print Totals
+	this.printTotals();
 	System.out.println();  
   }
   
@@ -115,6 +113,11 @@ public class Item {
   public double calculateTotalCost() {
 	this.totalCost = this.price * this.quantity;
 	return this.totalCost;
+  }
+  
+  // Calculate Coupon Savings
+  public double calculateCouponSavings() {
+	return (this.totalCost * this.coupon / 100);
   }
   
   // Calculate Final Cost
@@ -125,17 +128,34 @@ public class Item {
   
   // Print Total Cost
   public void printTotalCost() {
-	System.out.println("The total cost of " + this.name + " is " + Format.dollarFormat(this.totalCost));
+	System.out.println("Total:\t\t" + Format.dollarFormat(this.totalCost));
   }
   
   // Print Coupon Rate
   public void printCouponRate() {
-	System.out.println("The coupon rate of " + this.name + " is " + this.coupon + "%");
+	if(this.getCoupon() > 0) {
+		System.out.println("  **Your " + this.coupon + "% coupon for " + this.getName() + " saved you " + Format.dollarFormat(this.calculateCouponSavings()) + ".**");
+	}
   }
   
   // Print Final Cost
   public void printFinalCost() {
-	System.out.println("The final cost after the discount for " + this.name + " is " + Format.dollarFormat(this.calculateFinalCost()));
+	System.out.println("New Total:\t\t" + Format.dollarFormat(this.calculateFinalCost()));
+  }
+  
+  // Print Totals
+  public void printTotals() {
+	System.out.println(this.getName() + "\t" + this.getQuantity() + " @ " + Format.dollarFormat(this.getPrice()) + " ea.");
+	if(this.getCoupon() > 0) {
+		this.printTotalCost();
+		this.printCouponRate();
+	}
+	this.printFinalCost();
+	double rand = Math.random();
+	int index = (int) rand * 3;	
+	String [] words = {"Great!","Wonderful!","Perfect!"};
+	String exclamation = words[index];
+	System.out.println(exclamation + " You've added " + this.getName() + ".");
   }
   
  
@@ -145,7 +165,7 @@ public class Item {
   private String askForName() {
 	boolean isValid = false;
 	while(!isValid) {
-	  System.out.print("Enter the name of the item: ");
+	  System.out.print("Enter the name of your item: ");
 	  this.setName(input.next());
 	  isValid = isValidName();
 	}

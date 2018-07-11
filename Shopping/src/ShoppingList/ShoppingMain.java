@@ -9,16 +9,38 @@ import utilities.Format;
 
 
 public class ShoppingMain {
+  
+  // Main Method (starts the app)
   public static void main(String[] args) throws IOException {
 	// Setup Prompt for Gathering Data
 	input = new Scanner(System.in);
 	
-	// TODO: Welcome the Shopper and get their name
+	// Welcome the Shopper and get their name
+	String shopper;
+	System.out.println("************************************************************");
+	System.out.println();
+	System.out.println("Welcome to UBS CodeRed Market");
+	System.out.println();
+	System.out.println("************************************************************");
+	System.out.println();
+	System.out.println("What is your name, shopper? ");
+	shopper = input.next();
+	System.out.println();
+	System.out.println("Nice to meet you " + shopper + ".");
+	System.out.println();
 	
 	// Setup a cart for the shopper
-	// TODO: Add a timer to pause a few seconds
-	// TODO: Pass in shoppers name so we can add it to the cart
-	Cart shoppingCart = new Cart();
+	System.out.println("Let's get you a shopping cart...");
+	
+	// Add a timer to pause a few seconds
+	try {
+	  TimeUnit.SECONDS.sleep(2);
+	} catch (InterruptedException e) {
+	  e.printStackTrace();
+	}
+	
+	// Pass in shoppers name so we can add it to the cart
+	Cart shoppingCart = new Cart(shopper);
 	System.out.println("");
 	
 	// Import any items on their list
@@ -85,22 +107,26 @@ public class ShoppingMain {
 	System.out.print("Please enter a number: ");
 	// Get the users response
 	int action = input.nextInt();
+	System.out.println("*************************************");
 	System.out.println("");
 	// Respond to the user
 	switch(action) {
-	  case 1:	System.out.println("Viewing the Cart..."); //TODO: Display all items in the cart
+	  case 1:	cart.viewItemsInCart();
 	  			break;
-	  case 2: 	addItemToCart(cart);
+	  case 2: 	cart.createItemForCart();
 	  			break;
-	  case 3: 	addMultipleItemsToCart(cart);
+	  case 3: 	cart.createMultipleItemsForCart();
 	  			break;
-	  case 4: 	System.out.println("Removing an Item..."); //TODO: Remove an item from the cart
+	  case 4: 	cart.removeItemFromCart();
 	  			break;
 	  case 5: 	checkout(cart);
 	  			break;
 	  default:	System.out.println("Sorry...I did not understand your response.");
 	  			System.out.println("");
-	  			askWhatIsNext(cart);
+	}
+	// Ask the shopper what's next if they haven't checked out.
+	if(action != 5) {
+	  askWhatIsNext(cart);
 	}
 	System.out.println("");
   }
@@ -111,42 +137,6 @@ public class ShoppingMain {
 	File file = new File("src/ShoppingList/listForImport");
 	BufferedReader list = new BufferedReader(new FileReader(file));
 	return list;
-  }
-  
-  
-  // Add Item
-  private static void addItemToCart(Cart cart) {
-	Item item;
-	// Construct an instance
-	item = new Item(); // instantiates item
-	item.buildItem(); // asks questions to build item for cart
-	// Put the item in the cart
-	cart.putItemInCart(item);
-	
-	// Find out what the user wants to do next
-	askWhatIsNext(cart);	
-  }
-  
-  
-  // Add Multiple Items
-  private static void addMultipleItemsToCart(Cart cart) {
-	//Ask user input for number of items and create loop
-	System.out.print("How many different items would you like to put in your cart? ");
-	int numOfItems = input.nextInt();
-	System.out.println("");
-	
-	// Loop through number of items and construct each one
-	Item item;
-	for(int i=0; i<numOfItems; i++) {
-	  // Construct an instance
-	  item = new Item(); // instantiates item
-	  item.buildItem(); // asks questions to build item for cart
-	  // Put the item in the cart
-	  cart.putItemInCart(item);
-	}
-	
-	// Find out what the user wants to do next
-	askWhatIsNext(cart);
   }
   
   
@@ -161,10 +151,10 @@ public class ShoppingMain {
 	// Calculate and print cost after coupon code
 	int cart_coupon_rate = getCartCouponRate();
 	System.out.println("****** Final Cart Total ******");
-	double cartTotal_before_coupon = cart.getTotal();
-	System.out.println("Your Cart Total: " + Format.dollarFormat(cartTotal_before_coupon));
+	double cartTotal_before_coupon = cart.getGrandTotal();
+	System.out.println("Cart Total: " + Format.dollarFormat(cartTotal_before_coupon));
 	double cartTotal_after_coupon = calculateCouponCost(cartTotal_before_coupon, cart_coupon_rate);
-	System.out.println("Your Cart: " + Format.dollarFormat(cartTotal_after_coupon));
+	System.out.println("Final Total: " + Format.dollarFormat(cartTotal_after_coupon));
 
 	System.out.println("");
 	System.out.println("******************************");
@@ -226,8 +216,9 @@ public class ShoppingMain {
 	String cart_coupon_code = "";
 	int cart_coupon_rate = 0;
 	boolean isValid = false;
+	System.out.println("For being a loyal shopper, we'd like to offer you an extra discount on your entire cart.");
 	while(!isValid) {
-	  System.out.print("Enter your cart coupon code (A=5%, B=10%, C=15%): ");
+	  System.out.print("Enter your cart coupon code for extra savings (A=5%, B=10%, C=15%): ");
 	  cart_coupon_code = input.next();
 	  isValid = validCartCoupon(cart_coupon_code);			
 	}
@@ -247,7 +238,7 @@ public class ShoppingMain {
   private static double calculateCouponCost(double cost, int coupon) {
 	double savings = cost * coupon / 100;
 	double result = cost - savings;
-	System.out.println("Coupon Savings: " + Format.dollarFormat(savings));
+	System.out.println("Cart Savings: " + Format.dollarFormat(savings));
 	return result;
   }
   
