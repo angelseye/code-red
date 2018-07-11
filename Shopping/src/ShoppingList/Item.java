@@ -178,7 +178,8 @@ public class Item {
   private int askForCoupon() {
 	boolean isValid = false;
 	while(!isValid) {
-	  System.out.print("Enter the coupon % rate for " + this.name + ": ");
+	  System.out.println("Do you have a coupon for " + this.name + "?");
+	  System.out.print("If so, enter the coupon % rate for " + this.name + ", otherwise enter 0: ");
 	  this.setCoupon(input.nextInt());
 	  isValid = isValidCouponRate();
 	}
@@ -229,8 +230,8 @@ public class Item {
   private boolean isValidCouponRate() {
 	int errors = 0;
 	// Must be between 1 and 100
-	if(this.coupon < 1 || this.coupon > 100) {
-	  System.out.println("Please enter a value between 1 and 100");
+	if(this.coupon < 0 || this.coupon > 100) {
+	  System.out.println("Please enter a value between 0 and 100");
 	  errors++;
 	}
 	return (errors == 0) ? true : false;
