@@ -1,11 +1,13 @@
 package ShoppingList;
 
+import java.util.Random;
 import java.util.Scanner;
-import java.lang.Math;
 
 import utilities.Format;
 
 public class Item {
+  
+  Random random = new Random();
   
   // Properties
   private String name;
@@ -145,14 +147,12 @@ public class Item {
   
   // Print Totals
   public void printTotals() {
-	System.out.println(this.getName() + "\t" + this.getQuantity() + " @ " + Format.dollarFormat(this.getPrice()) + " ea.");
+	System.out.println(this.getName() + "\t" + this.getQuantity() + " @ " + Format.dollarFormat(this.getPrice()) + " ea.\t\t" + Format.dollarFormat(this.getTotalCost()));
 	if(this.getCoupon() > 0) {
-		this.printTotalCost();
 		this.printCouponRate();
+		this.printFinalCost();
 	}
-	this.printFinalCost();
-	double rand = Math.random();
-	int index = (int) rand * 3;	
+	int index = random.nextInt(3);	
 	String [] words = {"Great!","Wonderful!","Perfect!"};
 	String exclamation = words[index];
 	System.out.println(exclamation + " You've added " + this.getName() + ".");

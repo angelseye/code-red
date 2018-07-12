@@ -26,7 +26,7 @@ public class ShoppingMain {
 	System.out.println("What is your name, shopper? ");
 	shopper = input.next();
 	System.out.println();
-	System.out.println("Nice to meet you " + shopper + ".");
+	System.out.println("Nice to meet you, " + shopper + ".");
 	System.out.println();
 	
 	// Setup a cart for the shopper
@@ -58,12 +58,14 @@ public class ShoppingMain {
   private static Cart importShoppingList(Cart cart) throws NumberFormatException, IOException {
 	try {
 	  System.out.println("First, let's try to import your shopping list from a file...");	  
+
 	  // Pause for 3 seconds to make it feel like the application is thinking...lol
 	  try {
 		TimeUnit.SECONDS.sleep(3);
 	  } catch (InterruptedException e) {
 		e.printStackTrace();
 	  }
+
 	  // Okay, grab the file and run through it	
 	  BufferedReader importList = checkForImport();
 	  Item thisItem;
@@ -79,6 +81,7 @@ public class ShoppingMain {
 	} catch (FileNotFoundException e) {
 	  e.printStackTrace();
 	}
+	
 	int cartSize = cart.getItemList().size();
 	String word = (cartSize == 1) ? "item" : "items";
 	if(cartSize < 1) {
@@ -151,17 +154,19 @@ public class ShoppingMain {
 	// Calculate and print cost after coupon code
 	int cart_coupon_rate = getCartCouponRate();
 	System.out.println("****** Final Cart Total ******");
+	cart.viewItemsInCart();
+	System.out.println("-------------------------------------------------------");
 	double cartTotal_before_coupon = cart.getGrandTotal();
 	System.out.println("Cart Total: " + Format.dollarFormat(cartTotal_before_coupon));
 	double cartTotal_after_coupon = calculateCouponCost(cartTotal_before_coupon, cart_coupon_rate);
 	System.out.println("Final Total: " + Format.dollarFormat(cartTotal_after_coupon));
 
 	System.out.println("");
-	System.out.println("******************************");
+	System.out.println("-------------------------------------------------------");
 	System.out.println("");
-	System.out.println("Thank you for shopping with us today. We hope you had a great experience.");
+	System.out.println("Thank you for shopping with us today, " + cart.getName() + ". We hope you had a great experience.");
 	System.out.println("Please visit us again in the future.");
-	System.out.println("");
+	System.out.println("\n\n");
   }
   
   
@@ -190,8 +195,8 @@ public class ShoppingMain {
 	System.out.println("Most expensive item costs: " + Format.dollarFormat(maxCost));
 	System.out.println("Cheapest item costs: " + Format.dollarFormat(minCost));
 	//Print name of item which is most expensive
-	System.out.println(maxName + " is the most expensive item");
-	System.out.println(minName + " is the least expensive item");
+	System.out.println(maxName + " is the most expensive item you bought.");
+	System.out.println(minName + " is the least expensive item you bought.");
   }
 	
   
@@ -206,7 +211,7 @@ public class ShoppingMain {
 		maxCoupon = items.get(i).getCoupon();
 	  }
 	}
-	System.out.println(maxCoupon + " percent off is awesome!!");
+	System.out.println(maxCoupon + " percent off of a product is awesome!!");
   }
 	
   
@@ -222,6 +227,7 @@ public class ShoppingMain {
 	  cart_coupon_code = input.next();
 	  isValid = validCartCoupon(cart_coupon_code);			
 	}
+	System.out.println();
 	if(cart_coupon_code.equals("A")) {
 	  cart_coupon_rate = 5;
 	} else if(cart_coupon_code.equals("B")) {

@@ -136,6 +136,9 @@ public class Cart {
 	  Item item = items.get(i);
 	  System.out.println(item.getName() + ":\t\t" + item.getQuantity() + " @ " + Format.dollarFormat(item.getPrice()) + " ea.\t\t" + Format.dollarFormat(item.calculateTotalCost()));
 	}
+	if(items.size() == 0) {
+	  System.out.println("There are no items in your cart.");
+	}
 	System.out.println("-------------------------------------------------------");
 	System.out.println("Total:\t\t" + Format.dollarFormat(getTotal()));
 	System.out.println("Savings:\t" + Format.dollarFormat(getSavings()));
@@ -154,31 +157,36 @@ public class Cart {
 	  Item item = items.get(i);
 	  System.out.println((i+1) + ". " + item.getName());
 	}
+	if(items.size() == 0) {
+	  System.out.println("There are no items in your cart.");
+	}
 	System.out.println("-------------------------------------------------------");
-	System.out.print("Select the number for the item you wish to remove: ");
-	int action = input.nextInt();
-	if(action == 0 || action >= items.size()) {
-	  System.out.println("Sorry...I do not understand your request.");
+	if(items.size() > 0) {
+	  System.out.print("Select the number for the item you wish to remove: ");
+	  int action = input.nextInt();
+	  if(action == 0 || action > items.size()) {
+		System.out.println("Sorry...I do not understand your request.");
+		System.out.println();
+		removeItemFromCart();
+		return;
+	  }
+	  int indexToRemove = action-1;
+	  System.out.print("Are you sure you want to remove " + items.get(indexToRemove).getName() + " (Y/N)? ");
+	  String approve = input.next();
 	  System.out.println();
-	  removeItemFromCart();
-	}
-	int indexToRemove = action-1;
-	System.out.print("Are you sure you want to remove " + items.get(indexToRemove).getName() + " (Y/N)? ");
-	boolean remove = false;
-	String approve = input.next();
-	System.out.println();
-	if(approve.equals("Y")) {
-	  remove = true;
+	  if(approve.equals("Y")) {
+		items.remove(indexToRemove);
+		updateTotals();
+		System.out.println("Your item has been successfully removed.");
+		System.out.println();
+		viewItemsInCart();
+	  } else {
+		System.out.println("We did not remove your item.");
+		System.out.println();
+	  }
 	} else {
-	  System.out.println("We did not remove your item.");
-	  System.out.println();
-	  return;
+	  System.out.println("Sorry! There is nothing to remove.");
 	}
-	items.remove(indexToRemove);
-	updateTotals();
-	System.out.println("Your item has been successfully removed.");
-	System.out.println();
-	viewItemsInCart();
   }
   
   
